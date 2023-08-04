@@ -1,7 +1,9 @@
 const ProductManager = require('./ProductManager');
 
+const filePath = 'products.json';
+
 // Crear una instancia del gestor de productos
-const productManager = new ProductManager();
+const productManager = new ProductManager(filePath);
 
 // Obtener todos los productos devuelve un arreglo vacío
 const allProducts = productManager.getProducts();
@@ -42,3 +44,19 @@ console.log("Todos los productos:", allProducts);
 const productIdToFind = 2;
 const foundProduct = productManager.getProductById(productIdToFind);
 console.log("Producto encontrado:", foundProduct);
+
+// Actualizar producto por id
+const productIdToUpdate = 1;
+productManager.updateProduct(productIdToUpdate, { price: 150, stock: 15 });
+
+// Obtener todos los productos después de la actualización
+const updatedProducts = productManager.getProducts();
+console.log("Productos después de la actualización:", updatedProducts);
+
+// Eliminar producto por id
+const productIdToDelete = 2;
+productManager.deleteProduct(productIdToDelete);
+
+// Obtener todos los productos después de la eliminación
+const remainingProducts = productManager.getProducts();
+console.log("Productos después de la eliminación:", remainingProducts);

@@ -1,7 +1,28 @@
+const fs = require('fs');
+
 class ProductManager {
-  constructor() {
+  constructor(filePath) {
+    this.path = filePath;
     this.products = [];
     this.nextId = 1;
+    this.loadProducts();
+  }
+
+  loadProducts() {
+    try {
+      const data = fs.readFileSync(this.path, 'utf8');
+      this.products = JSON.parse(data);
+      const lastProductId = this.products.length > 0 ? this.products[this.products.length - 1].id : 0;
+      this.nextId = lastProductId + 1;
+    } catch (error) {
+      // If the file does not exist or is empty, handle the error gracefully.
+      this.products = [];
+    }
+  }
+
+  saveProducts() {
+    const data = JSON.stringify(this.products, null, 2);
+    fs.writeFileSync(this.path, data, 'utf8');
   }
 
   addProduct(product) {
@@ -22,6 +43,8 @@ class ProductManager {
 
     this.products.push(newProduct);
     this.nextId++;
+
+    this.saveProducts();
   }
 
   getProducts() {
@@ -37,6 +60,35 @@ class ProductManager {
     }
 
     return product;
+  }
+
+  updateProduct(id, updatedFields) {
+    const productIndex = this.products.findIndex((p) => p.id === id);
+
+    if (productIndex === -1) {
+      console.error("Producto no encontrado.");
+      return;
+    }
+
+    this.products[productIndex] = {
+      ...this.products[productIndex],
+      ...updatedFields,
+      id, // Ensure the ID remains unchanged
+    };
+
+    this.saveProducts();
+  }
+
+  deleteProduct(id) {
+    const productIndex = this.products.findIndex((p) => p.id === id);
+
+    if (productIndex === -1) {
+      console.error("Producto no encontrado.");
+      return;
+    }
+
+    this.products.splice(productIndex, 1);
+    this.saveProducts();
   }
 }
 
