@@ -15,7 +15,6 @@ class ProductManager {
       const lastProductId = this.products.length > 0 ? this.products[this.products.length - 1].id : 0;
       this.nextId = lastProductId + 1;
     } catch (error) {
-      // If the file does not exist or is empty, handle the error gracefully.
       this.products = [];
     }
   }
@@ -73,7 +72,7 @@ class ProductManager {
     this.products[productIndex] = {
       ...this.products[productIndex],
       ...updatedFields,
-      id, // Ensure the ID remains unchanged
+      id,
     };
 
     this.saveProducts();
